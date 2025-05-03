@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holographic Card</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #121212;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    .card-container {
+      perspective: 1000px;
+    }
+    .card {
+      width: 300px;
+      height: 420px;
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease;
+      cursor: pointer;
+    }
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      z-index: 0;
+      position: relative;
+    }
+    .holo-overlay {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image: url('https://uploads-ssl.webflow.com/622952100c135e4f77562f52/622963e2de7b7e577c3b5b7e_Sparkles.gif');
+      background-size: cover;
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      z-index: 1;
+    }
+    .light-effect {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 40%);
+      mix-blend-mode: screen;
+      opacity: 0;
+      z-index: 2;
+      transition: opacity 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <div class="card" id="card">
+      <img src="https://i.imgur.com/8u05aKo.png" alt="Card Image" />
+      <div class="holo-overlay"></div>
+      <div class="light-effect" id="lightEffect"></div>
+    </div>
+  </div>
+
+  <script>
+    const card = document.getElementById('card');
+    const lightEffect = document.getElementById('lightEffect');
+
+    function applyCardRotation(cardElement, e) {
+      const rect = cardElement.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = -(y - centerY) / 10;
+      const rotateY = (x - centerX) / 10;
+      cardElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+      const percentX = x / rect.width;
+      const percentY = y / rect.height;
+      lightEffect.style.background = `radial-gradient(circle at ${percentX * 100}% ${percentY * 100}%, rgba(255,255,255,0.3) 0%, transparent 40%)`;
+      lightEffect.style.opacity = 1;
+    }
+
+    function resetRotation(cardElement) {
+      cardElement.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      lightEffect.style.opacity = 0;
+    }
+
+    card.addEventListener('mousemove', (e) => applyCardRotation(card, e));
+    card.addEventListener('mouseleave', () => resetRotation(card));
+  </script>
+</body>
+</html>
