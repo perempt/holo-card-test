@@ -51,7 +51,7 @@
       background-image: url('https://i.imgur.com/SMM49DJ.png');
       background-size: cover;
       mix-blend-mode: screen;
-      opacity: 0.9;
+      opacity: 1;
       z-index: 1;
     }
     .light-effect {
@@ -118,7 +118,7 @@
       lightEffect.style.opacity = 1;
 
       // Parallax effect for holo-overlay
-      holoOverlay.style.transform = `translate3d(${percentX * 10}px, ${percentY * 10}px, 0)`;
+      holoOverlay.style.transform = `translate3d(${percentX * 5}px, ${percentY * 5}px, 0)`;
 
       // Foil-like effect based on light position
       foilEffect.style.opacity = 1;
