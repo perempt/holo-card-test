@@ -12,11 +12,11 @@
       margin: 0;
       height: 100vh;
       background: #121212;
+      font-family: sans-serif;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
-      font-family: sans-serif;
     }
     .card-container {
       perspective: 1000px;
@@ -68,8 +68,6 @@
       z-index: 2;
       transition: opacity 0.2s ease;
     }
-
-    /* Foil-like Specular Effect */
     .foil-effect {
       content: "";
       position: absolute;
@@ -96,7 +94,6 @@
       text-decoration: none;
       transition: background-color 0.3s ease;
     }
-
     .nav-button:hover {
       background-color: #0d6efd;
     }
@@ -112,6 +109,8 @@
     </div>
   </div>
 
+  <a href="../index.html" class="nav-button">Back to 1st Version</a>
+
   <script>
     const card = document.getElementById('card');
     const lightEffect = document.getElementById('lightEffect');
@@ -120,8 +119,8 @@
 
     function applyCardRotation(cardElement, e) {
       const rect = cardElement.getBoundingClientRect();
-      const x = e.clientX || e.touches[0].clientX;  // Check for mouse or touch event
-      const y = e.clientY || e.touches[0].clientY;  // Check for mouse or touch event
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       const rotateX = -(y - centerY) / 10;
@@ -151,9 +150,12 @@
     card.addEventListener('mouseleave', () => resetRotation(card));
 
     // Touch events for mobile
-    card.addEventListener('touchmove', (e) => applyCardRotation(card, e));
-    card.addEventListener('touchend', () => resetRotation(card));  // When the touch ends, reset the card rotation
+    card.addEventListener('touchmove', (e) => {
+      e.preventDefault();  // Prevents default touch actions like scrolling
+      const touch = e.touches[0];
+      applyCardRotation(card, touch);
+    });
+    card.addEventListener('touchend', () => resetRotation(card));
   </script>
-  <a href="../index.html" class="nav-button">Back to 1st version</a>
 </body>
 </html>
