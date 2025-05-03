@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +38,7 @@
       display: block;
       z-index: 0;
       position: relative;
+      transition: transform 0.1s ease;
     }
     .holo-overlay {
       content: "";
@@ -62,10 +62,26 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 40%);
-      mix-blend-mode: screen;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 50%);
+      mix-blend-mode: overlay;
       opacity: 0;
       z-index: 2;
+      transition: opacity 0.2s ease;
+    }
+
+    /* Foil-like Specular Effect */
+    .foil-effect {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+      mix-blend-mode: overlay;
+      opacity: 0;
+      z-index: 3;
       transition: opacity 0.2s ease;
     }
   </style>
@@ -76,12 +92,15 @@
       <img src="https://i.imgur.com/8u05aKo.png" alt="Card Image" />
       <div class="holo-overlay"></div>
       <div class="light-effect" id="lightEffect"></div>
+      <div class="foil-effect" id="foilEffect"></div>
     </div>
   </div>
 
   <script>
     const card = document.getElementById('card');
     const lightEffect = document.getElementById('lightEffect');
+    const holoOverlay = document.querySelector('.holo-overlay');
+    const foilEffect = document.getElementById('foilEffect');
 
     function applyCardRotation(cardElement, e) {
       const rect = cardElement.getBoundingClientRect();
@@ -95,13 +114,22 @@
 
       const percentX = x / rect.width;
       const percentY = y / rect.height;
-      lightEffect.style.background = `radial-gradient(circle at ${percentX * 100}% ${percentY * 100}%, rgba(255,255,255,0.3) 0%, transparent 40%)`;
+      lightEffect.style.background = `radial-gradient(circle at ${percentX * 100}% ${percentY * 100}%, rgba(255,255,255,0.15) 0%, transparent 50%)`;
       lightEffect.style.opacity = 1;
+
+      // Parallax effect for holo-overlay
+      holoOverlay.style.transform = `translate3d(${percentX * 10}px, ${percentY * 10}px, 0)`;
+
+      // Foil-like effect based on light position
+      foilEffect.style.opacity = 1;
+      foilEffect.style.background = `radial-gradient(circle at ${percentX * 100}% ${percentY * 100}%, rgba(255,255,255,0.3) 0%, transparent 60%)`;
     }
 
     function resetRotation(cardElement) {
       cardElement.style.transform = 'rotateX(0deg) rotateY(0deg)';
       lightEffect.style.opacity = 0;
+      holoOverlay.style.transform = 'translate3d(0, 0, 0)';
+      foilEffect.style.opacity = 0;
     }
 
     card.addEventListener('mousemove', (e) => applyCardRotation(card, e));
