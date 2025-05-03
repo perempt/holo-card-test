@@ -12,11 +12,11 @@
       margin: 0;
       height: 100vh;
       background: #121212;
-      font-family: sans-serif;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
+      font-family: sans-serif;
     }
     .card-container {
       perspective: 1000px;
@@ -68,6 +68,8 @@
       z-index: 2;
       transition: opacity 0.2s ease;
     }
+
+    /* Foil-like Specular Effect */
     .foil-effect {
       content: "";
       position: absolute;
@@ -94,6 +96,7 @@
       text-decoration: none;
       transition: background-color 0.3s ease;
     }
+
     .nav-button:hover {
       background-color: #0d6efd;
     }
@@ -109,8 +112,6 @@
     </div>
   </div>
 
-  <a href="holo/index.html" class="nav-button">To 2nd Version</a>
-
   <script>
     const card = document.getElementById('card');
     const lightEffect = document.getElementById('lightEffect');
@@ -119,8 +120,8 @@
 
     function applyCardRotation(cardElement, e) {
       const rect = cardElement.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = e.clientX || e.touches[0].clientX;  // Check for mouse or touch event
+      const y = e.clientY || e.touches[0].clientY;  // Check for mouse or touch event
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       const rotateX = -(y - centerY) / 10;
@@ -132,7 +133,7 @@
       lightEffect.style.background = `radial-gradient(circle at ${percentX * 100}% ${percentY * 100}%, rgba(250,230,182,0.15) 0%, transparent 30%)`;
       lightEffect.style.opacity = 1;
 
-      holoOverlay.style.transform = `translate3d(${percentX * 0}px, ${percentY * 0}px, 0)`;
+      holoOverlay.style.transform = `translate3d(${percentX * 10}px, ${percentY * 10}px, 0)`;
 
       foilEffect.style.opacity = 1;
       foilEffect.style.background = `radial-gradient(circle at ${percentX * 100}% ${percentY * 100}%, rgba(255,255,255,0.3) 0%, transparent 60%)`;
@@ -145,8 +146,14 @@
       foilEffect.style.opacity = 0;
     }
 
+    // Mouse events
     card.addEventListener('mousemove', (e) => applyCardRotation(card, e));
     card.addEventListener('mouseleave', () => resetRotation(card));
+
+    // Touch events for mobile
+    card.addEventListener('touchmove', (e) => applyCardRotation(card, e));
+    card.addEventListener('touchend', () => resetRotation(card));  // When the touch ends, reset the card rotation
   </script>
+  <a href="holo/index.html" class="nav-button">to 2nd version</a>
 </body>
 </html>
